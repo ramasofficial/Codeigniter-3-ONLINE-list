@@ -29,7 +29,7 @@ class Online
 	 *
 	 * Enables the use of CI super-global without having to define an extra variable.
 	 *
-	 * I can't remember where I first saw this, so thank you if you are the original author. -Militis
+	 * I can't remember where I first saw this, so thank you if you are the original author. - Militis
 	 *
 	 * @access	public
 	 * @param	$var
