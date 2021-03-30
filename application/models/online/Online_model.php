@@ -1,7 +1,35 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Online_model extends CI_Model
-{    
+{        
+    /**
+     * db - DB variable
+     *
+     * @var object
+     */
+    private $db;
+    
+    /**
+     * table - Online table
+     *
+     * @var string
+     */
+    private $table;
+    
+    /**
+     * tableMaxOnline - Max online table
+     *
+     * @var string
+     */
+    private $tableMaxOnline;
+    
+    /**
+     * trackMaxOnline - Enable or disable max online tracking from config file
+     *
+     * @var bool
+     */
+    private $trackMaxOnline;
+
     /**
      * __construct
      *
@@ -13,7 +41,9 @@ class Online_model extends CI_Model
 
         // Load databases
         $this->db = $this->load->database('default', true);
-        $this->table = 'ionauth_online'; // Enter table name ex.: online_register
+        $this->table = 'ionauth_online';
+        $this->tableMaxOnline = 'ionauth_online_max';
+        $this->trackMaxOnline = $this->config->item('track_max_online', 'online');
     }
     
     /**
@@ -26,6 +56,10 @@ class Online_model extends CI_Model
     {
         $dateNow = date('Y-m-d H:i:s');
         $query = $this->db->select('id, username')->where('time <=', $dateNow)->get($this->table)->result_array();
+
+        if($this->trackMaxOnline) {
+            $this->trackMaxOnline();
+        }
 
         $deleteUsers = [];
         if(!empty($query)) {
@@ -86,5 +120,53 @@ class Online_model extends CI_Model
     {
         $query = $this->db->select('COUNT(id) as number')->get($this->table)->row_array();
         return $query['number'];
+    }
+    
+    /**
+     * trackMaxOnline - This function tracking users max online every day
+     *
+     * @return bool
+     */
+    private function trackMaxOnline()
+    {
+        $onlineNow = $this->getOnlineCount();
+
+        $today = date('Y-m-d');
+
+        $query = $this->db->select('id, max_online')->where('date', $today)->get($this->tableMaxOnline);
+
+        $data = [
+            'date' => $today,
+            'max_online' => $onlineNow,
+        ];
+
+        if($query->num_rows() <= 0) {
+            $this->db->insert($this->tableMaxOnline, $data);
+        } else {
+            $row = $query->row_array();
+
+            if($row['max_online'] < $onlineNow) {
+                $this->db->where('id', $row['id']);
+                $this->db->update($this->tableMaxOnline, $data);
+            }
+        }
+
+        return true;
+    }
+    
+    /**
+     * getMaxOnline - This function returns today max online users
+     *
+     * @return int
+     */
+    public function getMaxOnline()
+    {
+        $query = $this->db->select('max_online')->where('date', date('Y-m-d'))->get($this->tableMaxOnline)->row_array();
+
+        if(empty($query)) {
+            return false;
+        }
+
+        return $query['max_online'];
     }
 }

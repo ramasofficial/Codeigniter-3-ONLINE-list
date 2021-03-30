@@ -1,19 +1,3 @@
-/*
- Navicat MySQL Data Transfer
-
- Source Server         : ERP DB NEW
- Source Server Type    : MySQL
- Source Server Version : 100311
- Source Host           : 192.168.10.10:3306
- Source Schema         : erp
-
- Target Server Type    : MySQL
- Target Server Version : 100311
- File Encoding         : 65001
-
- Date: 29/03/2021 16:14:13
-*/
-
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 

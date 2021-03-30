@@ -1,6 +1,8 @@
 # Description
 This is a simple library for CODEIGNITER 3 ion_auth library, to view online users list and tracking where user browsing now.
 
+Now this library with tracking max online users every day.
+
 # Installation
 Upload all files to needed folders and upload a sql file to server.
 
