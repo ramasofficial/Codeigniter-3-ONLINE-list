@@ -1,9 +1,26 @@
 <?php if(!defined('BASEPATH')) exit('No direct script access allowed');
 
 class Online
-{
+{    
+    /**
+     * user - User information object - from ion_auth.
+     *
+     * @var object
+     */
     protected $user;
+
+    /**
+     * place - Where users browse: class and method
+     *
+     * @var array
+     */
     protected $place;
+
+    /**
+     * loginTime - How long users are considered online - in seconds?
+     *
+     * @var int
+     */
     public $loginTime;
     
     /**
@@ -21,6 +38,7 @@ class Online
         $this->loginTime = $this->config->item('login_time', 'online');
 
 
+        // The checking process starts
         $this->check();
     }
 
