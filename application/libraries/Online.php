@@ -54,9 +54,9 @@ class Online
 	 * @return	mixed
 	 */
     public function __get($var)
-	{
-		return get_instance()->$var;
-	}
+    {
+        return get_instance()->$var;
+    }
     
     /**
      * check - Checks users online, and add users to online list
